@@ -1,0 +1,225 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -112,
+        0
+      ],
+      "id": "e7b9c0a1-95f3-4407-afc2-9c3f76ca8942",
+      "name": "When chat message received",
+      "webhookId": "9eb52042-0173-470e-8569-1cf6db0a3822"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 25
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        192
+      ],
+      "id": "216e1f09-d803-436b-a0db-9e333ca4b2f3",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "app7thwd8SoRIcPyZ",
+          "mode": "list",
+          "cachedResultName": "payments",
+          "cachedResultUrl": "https://airtable.com/app7thwd8SoRIcPyZ"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblR8oE6Iyk8OGbIM",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/app7thwd8SoRIcPyZ/tblR8oE6Iyk8OGbIM"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id__using_to_match_', ``, 'string') }}",
+            "Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Name', ``, 'string') }}",
+            "amount": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('amount', ``, 'number') }}",
+            "date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('date', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "amount",
+              "displayName": "amount",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.2,
+      "position": [
+        336,
+        144
+      ],
+      "id": "3cb09c26-af5a-4c4f-a378-20a21f5dd1a3",
+      "name": "payment notebook",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "2ACr43MqWlG8rdNs",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are a helpful assistant\n{{ $now }}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        64,
+        0
+      ],
+      "id": "08c11456-588b-4718-8755-5340575d1504",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        32,
+        160
+      ],
+      "id": "dd167720-21cc-466f-ae6f-a57db7499c58",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "vTObZoICK8IsAq7l",
+          "name": "OpenRouter account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "payment notebook": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Riyadh",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "6e423d8a-1945-48b1-b437-fb664f9aaa97",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c076be2a3c6898913476840ba8d7c49aecd05a62f71980ebb7fa13f2b3e28cb8"
+  },
+  "id": "xGUBO0qKjY2vNc2a",
+  "tags": []
+}
